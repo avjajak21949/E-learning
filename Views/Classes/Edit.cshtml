@@ -1,0 +1,73 @@
+﻿@model Demo03.Models.Class
+
+@{
+    ViewData["Title"] = "Edit Class";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm my-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Edit Class</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ClassID" />
+
+                        <div class="mb-3">
+                            <label asp-for="CourseID" class="form-label"></label>
+                            <select asp-for="CourseID" class="form-select" asp-items="ViewBag.CourseID">
+                                <option value="">-- Select Course --</option>
+                            </select>
+                            <span asp-validation-for="CourseID" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TeacherId" class="form-label">Teacher</label>
+                            <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.TeacherId">
+                                <option value="">-- Select Teacher --</option>
+                            </select>
+                            <span asp-validation-for="TeacherId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Class Name</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ScheduleInfo" class="form-label">Schedule Info</label>
+                            <input asp-for="ScheduleInfo" class="form-control" />
+                            <span asp-validation-for="ScheduleInfo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaxCapacity" class="form-label">Maximum Class Capacity</label>
+                            <input asp-for="MaxCapacity" class="form-control" type="number" min="1" required />
+                            <small class="form-text text-muted">
+                                Enter the maximum number of students that can enroll in this class (minimum 1)
+                            </small>
+                            <span asp-validation-for="MaxCapacity" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center">
+                <a asp-action="Index" class="btn btn-link">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

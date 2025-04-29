@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Demo03.Models.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Courses</h2>
+        @if (User.IsInRole("Employer") || User.IsInRole("Manager"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create New Course
+            </a>
+        }
+    </div>
+
+    <div class="row">
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@item.CourseCode</h6>
+                            <p class="card-text">@item.Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">@item.CreditHours Credit Hours</span>
+                                <span class="badge bg-secondary">@(item.Classes != null ? item.Classes.Count : 0) Classes</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            @if (User.IsInRole("Employer") || User.IsInRole("Manager"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.CourseID" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            }
+                            <a asp-controller="Classes" asp-action="Index" asp-route-courseId="@item.CourseID" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-list"></i> View Classes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No courses available at this time.
+                </div>
+            </div>
+        }
+    </div>
+</div>

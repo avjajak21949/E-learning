@@ -1,0 +1,142 @@
+﻿@model Demo03.Models.Class
+
+@{
+    ViewData["Title"] = "Class Details";
+}
+
+<div class="container mt-4">
+    <!-- Class Details Card -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title mb-0">@Model.Name</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Course:</dt>
+                <dd class="col-sm-8">@Model.Course?.Name</dd>
+
+                <dt class="col-sm-4">Schedule Info:</dt>
+                <dd class="col-sm-8">@Model.ScheduleInfo</dd>
+
+                <dt class="col-sm-4">Maximum Capacity:</dt>
+                <dd class="col-sm-8">@Model.MaxCapacity</dd>
+            </dl>
+            <div class="d-flex justify-content-end">
+                <a asp-action="Edit" asp-route-id="@Model.ClassID" class="btn btn-warning me-2">Edit Class</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedules Card -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Class Schedules</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Schedules != null && Model.Schedules.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Days</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                                <th>Dates</th>
+                                @if (User.IsInRole("Manager"))
+                                {
+
+                                    <th>Actions</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var schedule in Model.Schedules)
+                            {
+                                <tr>
+                                    <td>@schedule.DaysOfWeek</td>
+                                    <td>@schedule.StartTime.ToString("hh\\:mm") - @schedule.EndTime.ToString("hh\\:mm")</td>
+                                    <td>@schedule.Location</td>
+                                    <td>@schedule.StartDate.ToShortDateString() - @schedule.EndDate.ToShortDateString()</td>
+                                    <td>
+                                        @if (User.IsInRole("Manager"))
+                                        {
+                                            <a asp-controller="Schedules" asp-action="Details" asp-route-id="@schedule.ScheduleID" class="btn btn-sm btn-info me-1">Details</a>
+                                            <a asp-controller="Schedules" asp-action="Edit" asp-route-id="@schedule.ScheduleID" class="btn btn-sm btn-warning">Edit</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="mb-0">No schedules found for this class.</p>
+            }
+        </div>
+        <div class="card-footer text-end">
+            @if (User.IsInRole("Manager"))
+            {
+                <a asp-controller="Schedules" asp-action="Create" asp-route-classId="@Model.ClassID" class="btn btn-primary">Add Schedule</a>
+            }
+            @if (User.IsInRole("Teacher"))
+            {
+                <a asp-controller="Documents" asp-action="Upload" asp-route-classID="@Model.ClassID" class="btn btn-success">
+                    <i class="fas fa-paperclip"></i> Attach Document
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Students Card -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Enrolled Students</h5>
+            @if (User.IsInRole("Manager"))
+            {
+                <a asp-controller="StudentClasses" asp-action="Create" asp-route-classID="@Model.ClassID" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-user-plus"></i> Enroll Student
+                </a>
+            }
+        </div>
+        <div class="card-body">
+            @if (User.IsInRole("Teacher"))
+            {
+                <a asp-controller="Attendance" asp-action="TakeAttendance" asp-route-classID="@Model.ClassID" class="btn btn-success">
+                    Take Attendance
+                </a>
+            }
+            @if (Model.StudentClasses != null && Model.StudentClasses.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student Number</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var studentClass in Model.StudentClasses)
+                            {
+                                <tr>
+                                    <td>@studentClass.Student.StudentNumber</td>
+                                    <td>@studentClass.Student.FullName</td>
+                                    <td>@studentClass.Student.Email</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="mb-0">No students are currently enrolled in this class.</p>
+            }
+        </div>
+    </div>
+</div>

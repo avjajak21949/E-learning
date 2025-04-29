@@ -1,0 +1,37 @@
+@model Demo03.Models.Meeting
+
+@{
+    ViewData["Title"] = "Meeting Room";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Meeting Room</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5>Class: @Model.Class?.Name</h5>
+                        <p>Start Time: @Model.StartTime.ToString("g")</p>
+                        <p>Host: @Model.Host?.UserName</p>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="@Model.MeetingLink" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fas fa-video"></i> Join Meeting
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Here we can add JavaScript for implementing video chat functionality
+        // This could integrate with WebRTC or another video chat service
+    </script>
+} 

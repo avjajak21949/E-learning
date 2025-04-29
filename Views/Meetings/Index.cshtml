@@ -1,0 +1,74 @@
+@model IEnumerable<Demo03.Models.Meeting>
+
+@{
+    ViewData["Title"] = "Meetings";
+}
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2>Meetings</h2>
+        </div>
+        <div class="col text-end">
+            @if (User.IsInRole("Teacher"))
+            {
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Meeting
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Start Time</th>
+                    <th>Meeting Link</th>
+                    <th>Host</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Class?.Name</td>
+                        <td>@item.StartTime.ToString("g")</td>
+                        <td>
+                            <a href="@item.MeetingLink" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-video"></i> Join Meeting
+                            </a>
+                        </td>
+                        <td>@item.Host?.UserName</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.MeetingID" class="btn btn-sm btn-info">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                @if (User.IsInRole("Student, Teacher, Manager") && item.HostUserId == User.Identity.Name)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.MeetingID" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.MeetingID" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div> 

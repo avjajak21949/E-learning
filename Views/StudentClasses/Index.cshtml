@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Demo03.Models.StudentClass>
+
+@{
+    ViewData["Title"] = "Student Class Enrollments";
+}
+
+<h1>Student Class Enrollments</h1>
+
+@if (User.IsInRole("Administrator") || User.IsInRole("Employer"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Enrollment</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Student Name</th>
+                <th>Student Number</th>
+                <th>Class Name</th>
+                <th>Course</th>
+                <th>Teacher</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Student?.FullName</td>
+                    <td>@item.Student?.StudentNumber</td>
+                    <td>@item.Class?.Name</td>
+                    <td>@item.Class?.Course?.Name</td>
+                    <td>@item.Class?.Teacher?.FullName</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a asp-action="Details" asp-route-id="@item.StudentClassID" class="btn btn-info btn-sm">Details</a>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Employer"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.StudentClassID" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.StudentClassID" class="btn btn-danger btn-sm">Delete</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No student class enrollments found.
+    </div>
+}

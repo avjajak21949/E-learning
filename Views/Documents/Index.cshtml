@@ -1,0 +1,52 @@
+@model IEnumerable<Demo03.Models.Document>
+
+@{
+    ViewData["Title"] = "Documents";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Documents</h2>
+        <a asp-action="Upload" class="btn btn-primary">
+            <i class="fas fa-upload"></i> Upload New Document
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <p class="mb-0">No documents uploaded yet. Click the Upload button to add your first document!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Title</h5>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="card-text">@item.Description</p>
+                            }
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Uploaded on @item.UploadDate.ToString("MMM dd, yyyy")
+                                    @if (item.Class != null)
+                                    {
+                                        <span> | Class: @item.Class.Name</span>
+                                    }
+                                </small>
+                            </p>
+                            <a asp-action="Download" asp-route-id="@item.DocumentID" class="btn btn-outline-primary">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div> 

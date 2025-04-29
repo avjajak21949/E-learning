@@ -1,0 +1,91 @@
+@model IEnumerable<Demo03.Models.Document>
+
+@{
+    ViewData["Title"] = "Course Materials";
+}
+
+<div class="container">
+    <h2>Course Materials</h2>
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <p class="mb-0">No course materials available yet.</p>
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="courseDocuments">
+            @{
+                var groupedDocs = Model.GroupBy(d => d.Class?.Name ?? "Other");
+            }
+            @foreach (var classGroup in groupedDocs)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                data-bs-target="#class-@classGroup.Key.Replace(" ", "")" aria-expanded="true">
+                            @classGroup.Key
+                        </button>
+                    </h2>
+                    <div id="class-@classGroup.Key.Replace(" ", "")" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <div class="row">
+                                @foreach (var doc in classGroup)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">@doc.Title</h5>
+                                                @if (!string.IsNullOrEmpty(doc.Description))
+                                                {
+                                                    <p class="card-text">@doc.Description</p>
+                                                }
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">
+                                                        @doc.Category.ToString() | 
+                                                        Uploaded: @doc.UploadDate.ToString("MMM dd, yyyy")
+                                                    </small>
+                                                    <a asp-action="Download" asp-route-id="@doc.DocumentID" 
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-download"></i> Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Keep the last opened accordion section open
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const button = item.querySelector('.accordion-button');
+            const collapse = item.querySelector('.accordion-collapse');
+            
+            collapse.addEventListener('shown.bs.collapse', () => {
+                localStorage.setItem(collapse.id, 'open');
+            });
+            
+            collapse.addEventListener('hidden.bs.collapse', () => {
+                localStorage.removeItem(collapse.id);
+            });
+            
+            const isOpen = localStorage.getItem(collapse.id) === 'open';
+            if (!isOpen) {
+                collapse.classList.remove('show');
+                button.classList.add('collapsed');
+            }
+        });
+    </script>
+} 

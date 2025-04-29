@@ -1,0 +1,78 @@
+@model Demo03.Models.Student
+
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Student Details</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Student Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FullName)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FullName)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.StudentNumber)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.StudentNumber)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Department)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Department)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h5 class="font-weight-bold">Enrolled Classes</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Class Name</th>
+                                    <th>Course</th>
+                                    <th>Teacher</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.StudentClasses != null && Model.StudentClasses.Any())
+                                {
+                                    @foreach (var studentClass in Model.StudentClasses)
+                                    {
+                                        <tr>
+                                            <td>@studentClass.Class?.Name</td>
+                                            <td>@studentClass.Class?.Course?.Name</td>
+                                            <td>@studentClass.Class?.Teacher?.FullName</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">No enrolled classes found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div> 

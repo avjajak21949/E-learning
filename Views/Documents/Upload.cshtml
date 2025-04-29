@@ -1,0 +1,114 @@
+@model Demo03.Models.Document
+
+@{
+    ViewData["Title"] = "Upload Document";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Upload Document</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Upload" enctype="multipart/form-data" id="uploadForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-bold">Document Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter document title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter document description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label fw-bold">Document Type</label>
+                    <select asp-for="Type" class="form-select" asp-items="Html.GetEnumSelectList<DocumentType>()">
+                        <option value="">-- Select Type --</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ClassID" class="form-label fw-bold">Class</label>
+                    <select asp-for="ClassID" class="form-select" asp-items="ViewBag.ClassID">
+                        <option value="">-- Select Class --</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Upload File</label>
+                    <div id="dropZone" class="border rounded p-4 text-center bg-light">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                        <p class="mb-0">Drag and drop files here or click to select</p>
+                        <input type="file" name="file" id="fileInput" class="d-none" />
+                    </div>
+                    <div id="filePreview" class="mt-3 d-none">
+                        <p class="text-muted">Selected file: <span id="fileName" class="fw-bold"></span></p>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const fileNameSpan = document.getElementById('fileName');
+
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('bg-primary', 'text-white');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('bg-primary', 'text-white');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-primary', 'text-white');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                showFilePreview(files[0]);
+            }
+        });
+
+        // Handle click to select
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                showFilePreview(e.target.files[0]);
+            }
+        });
+
+        function showFilePreview(file) {
+            fileNameSpan.textContent = file.name;
+            filePreview.classList.remove('d-none');
+        }
+    </script>
+}

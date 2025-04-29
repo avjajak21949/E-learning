@@ -1,0 +1,152 @@
+@model Demo03.Models.Schedule
+
+@{
+    ViewData["Title"] = "Edit Schedule";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" id="scheduleForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ScheduleID" />
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="ClassID" class="control-label">Class</label>
+                            <select asp-for="ClassID" class="form-control" asp-items="ViewBag.ClassID" required>
+                                <option value="">-- Select Class --</option>
+                            </select>
+                            <span asp-validation-for="ClassID" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="StartDate" class="control-label">Start Date</label>
+                                    <input asp-for="StartDate" class="form-control" type="date" required />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="EndDate" class="control-label">End Date</label>
+                                    <input asp-for="EndDate" class="form-control" type="date" required />
+                                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="control-label">Days of Week</label>
+                            <div id="daysError" class="text-danger mb-2" style="display:none;">Please select at least one day of the week.</div>
+                            <div class="row mt-2">
+                                @{
+                                    var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+                                    var selectedDays = Model.DaysOfWeek?.Split(',') ?? new string[0];
+                                    foreach (var day in days)
+                                    {
+                                        <div class="col-md-3 mb-2">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="day-@day" class="form-check-input day-checkbox" 
+                                                       id="day-@day" value="@day" @(selectedDays.Contains(day) ? "checked" : "") />
+                                                <label class="form-check-label" for="day-@day">@day</label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <input type="hidden" id="DaysOfWeekInput" name="DaysOfWeek" value="@Model.DaysOfWeek" />
+                            <span asp-validation-for="DaysOfWeek" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="StartTime" class="control-label">Start Time</label>
+                                    <input asp-for="StartTime" class="form-control" type="time" required />
+                                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="EndTime" class="control-label">End Time</label>
+                                    <input asp-for="EndTime" class="form-control" type="time" required />
+                                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Location" class="control-label">Location</label>
+                            <input asp-for="Location" class="form-control" required />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="AvailableSeats" class="control-label">Available Seats</label>
+                            <input asp-for="AvailableSeats" class="form-control" type="number" min="1" max="200" required />
+                            <span asp-validation-for="AvailableSeats" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Schedule
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Handle form submission
+            $('#scheduleForm').on('submit', function (e) {
+                // Get all checked days
+                var selectedDays = [];
+                $('.day-checkbox:checked').each(function () {
+                    selectedDays.push($(this).val());
+                });
+                
+                // Join them with commas and set to hidden input
+                $('#DaysOfWeekInput').val(selectedDays.join(','));
+                console.log('Selected days: ' + selectedDays.join(','));
+                
+                // If no days are selected, prevent form submission
+                if (selectedDays.length === 0) {
+                    e.preventDefault();
+                    $('#daysError').show();
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Clear the error message when a checkbox is checked
+            $('.day-checkbox').on('change', function() {
+                if ($('.day-checkbox:checked').length > 0) {
+                    $('#daysError').hide();
+                }
+            });
+            
+            // Initialize the hidden input with the current value
+            var selectedDays = [];
+            $('.day-checkbox:checked').each(function() {
+                selectedDays.push($(this).val());
+            });
+            $('#DaysOfWeekInput').val(selectedDays.join(','));
+        });
+    </script>
+} 

@@ -1,0 +1,52 @@
+@model Demo03.Models.Meeting
+
+@{
+    ViewData["Title"] = "Create Meeting";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Create Meeting</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="ClassID" class="control-label">Class</label>
+                            <select asp-for="ClassID" class="form-control" asp-items="ViewBag.ClassID" required>
+                                <option value="">-- Select Class --</option>
+                            </select>
+                            <span asp-validation-for="ClassID" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="StartTime" class="control-label">Start Time</label>
+                            <input asp-for="StartTime" class="form-control" type="datetime-local" required />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="MeetingLink" class="control-label">Meeting Link</label>
+                            <input asp-for="MeetingLink" class="form-control" placeholder="Paste your meeting link here" required />
+                            <span asp-validation-for="MeetingLink" class="text-danger"></span>
+                            <small class="form-text text-muted">Enter the full meeting URL from Google Meet, Zoom, or your preferred platform.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Create Meeting" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

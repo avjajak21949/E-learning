@@ -1,0 +1,60 @@
+@model Demo03.Models.Document
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h1 class="card-title">@Model.Title</h1>
+            <h6 class="card-subtitle mb-3 text-muted">
+                Uploaded by @Model.UploadedBy.UserName on @Model.UploadDate.ToString("MMM dd, yyyy")
+            </h6>
+            <p class="card-text">@Model.Description</p>
+            <div class="mb-3">
+                <a asp-action="Download" asp-route-id="@Model.DocumentID" class="btn btn-success">
+                    <i class="fas fa-download"></i> Download Document
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3>Comments</h3>
+            
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-action="Comment" method="post" class="mb-4">
+                    <input type="hidden" name="documentId" value="@Model.DocumentID" />
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Please <a asp-area="Identity" asp-page="/Account/Login">login</a> to post comments.
+                </div>
+            }
+
+            <div class="comments-section">
+                @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedAt))
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="card-subtitle mb-2 text-muted">@comment.User.UserName</h6>
+                                <small class="text-muted">@comment.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                            </div>
+                            <p class="card-text">@comment.Content</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div> 

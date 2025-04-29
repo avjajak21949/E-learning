@@ -1,0 +1,27 @@
+﻿@model Demo03.Models.StudentClass
+
+@{
+    ViewData["Title"] = "Delete Student Class Enrollment";
+}
+
+<h1>Delete Student Class Enrollment</h1>
+
+<h3>Are you sure you want to delete this enrollment?</h3>
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Class</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Class.Name)</dd>
+
+        <dt class="col-sm-3">Student Name</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Student.FullName)</dd>
+
+        <dt class="col-sm-3">Student Number</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Student.StudentNumber)</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="StudentClassID" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

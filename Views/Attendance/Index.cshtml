@@ -1,0 +1,27 @@
+@model IEnumerable<Demo03.Models.Class>
+
+@{
+    ViewData["Title"] = "Attendance";
+}
+
+<div class="container">
+    <h2>Take Attendance</h2>
+    <hr />
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Course.Name</p>
+                        <a asp-action="TakeAttendance" asp-route-classId="@item.ClassID" class="btn btn-primary">
+                            Take Attendance
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

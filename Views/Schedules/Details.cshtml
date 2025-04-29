@@ -1,0 +1,50 @@
+@model Demo03.Models.Schedule
+
+@{
+    ViewData["Title"] = "Schedule Details";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Schedule Details</h3>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+            <h5 class="card-title">Schedule Information</h5>
+            <hr />
+            <dl class="row">
+                <dt class="col-md-3">Class</dt>
+                <dd class="col-md-9">@Model.Class.Name</dd>
+
+                <dt class="col-md-3">Course</dt>
+                <dd class="col-md-9">@Model.Class.Course.Name</dd>
+
+                <dt class="col-md-3">Start Date</dt>
+                <dd class="col-md-9">@Model.StartDate.ToShortDateString()</dd>
+
+                <dt class="col-md-3">End Date</dt>
+                <dd class="col-md-9">@Model.EndDate.ToShortDateString()</dd>
+
+                <dt class="col-md-3">Days of Week</dt>
+                <dd class="col-md-9">@Model.DaysOfWeek</dd>
+
+                <dt class="col-md-3">Time</dt>
+                <dd class="col-md-9">
+                    @Model.StartTime.ToString(@"hh\:mm") - @Model.EndTime.ToString(@"hh\:mm")
+                </dd>
+
+                <dt class="col-md-3">Location</dt>
+                <dd class="col-md-9">@Model.Location</dd>
+            </dl>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer text-end">
+            <a asp-action="Edit" asp-route-id="@Model.ScheduleID" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+        </div>
+    </div>
+</div>

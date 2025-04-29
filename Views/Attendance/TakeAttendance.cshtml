@@ -1,0 +1,80 @@
+@model Demo03.Models.AttendanceViewModel
+
+@{
+    ViewData["Title"] = "Take Attendance";
+}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Take Attendance - @Model.ClassName</h3>
+            <p class="text-muted mb-0">Date: @Model.Date.ToString("dddd, MMMM dd, yyyy")</p>
+        </div>
+        <div class="card-body">
+            <form asp-action="TakeAttendance" method="post">
+                <input type="hidden" asp-for="ClassID" />
+                <input type="hidden" asp-for="ClassName" />
+                <input type="hidden" asp-for="Date" />
+
+                <div class="mb-3">
+                    <button type="button" class="btn btn-success me-2" onclick="markAllPresent()">Mark All Present</button>
+                    <button type="button" class="btn btn-danger" onclick="markAllAbsent()">Mark All Absent</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.StudentAttendance.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Model.StudentAttendance[i].StudentName
+                                        <input type="hidden" asp-for="@Model.StudentAttendance[i].StudentID" />
+                                        <input type="hidden" asp-for="@Model.StudentAttendance[i].StudentName" />
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input attendance-checkbox" type="checkbox" 
+                                                   asp-for="@Model.StudentAttendance[i].IsPresent" />
+                                            <label class="form-check-label attendance-label" 
+                                                   for="@($"StudentAttendance_{i}__IsPresent")">
+                                                Present
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Save Attendance</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function markAllPresent() {
+            document.querySelectorAll('.attendance-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        function markAllAbsent() {
+            document.querySelectorAll('.attendance-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    </script>
+} 

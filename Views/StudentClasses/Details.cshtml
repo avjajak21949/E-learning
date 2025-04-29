@@ -1,0 +1,25 @@
+﻿@model Demo03.Models.StudentClass
+
+@{
+    ViewData["Title"] = "Student Class Enrollment Details";
+}
+
+<h1>Student Class Enrollment Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Class</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Class.Name)</dd>
+
+        <dt class="col-sm-3">Student Name</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Student.FullName)</dd>
+
+        <dt class="col-sm-3">Student Number</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Student.StudentNumber)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.StudentClassID" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

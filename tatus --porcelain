@@ -1,0 +1,4 @@
+warning: in the working copy of 'Areas/Identity/Pages/Account/Login.cshtml.cs', LF will be replaced by CRLF the next time Git touches it
+M	Areas/Identity/Pages/Account/Login.cshtml
+M	Areas/Identity/Pages/Account/Login.cshtml.cs
+M	Startup.cs
