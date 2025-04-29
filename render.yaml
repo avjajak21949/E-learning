@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: aspnet-core-app
-    env: dotnet
-    buildCommand: dotnet build
-    startCommand: dotnet Demo03.dll
-    region: oregon
-    plan: free
